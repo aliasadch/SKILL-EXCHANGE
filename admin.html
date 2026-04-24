@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - SkillSwap</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f3f4f6;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        --gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: var(--gradient-dark);
+        color: white;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+        transition: all 0.3s;
+        z-index: 100;
+      }
+
+      .sidebar .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s;
+        display: block;
+        text-decoration: none;
+      }
+
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar .nav-link i {
+        width: 24px;
+        margin-right: 12px;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: transform 0.3s;
+        height: 100%;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+      .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0;
+        color: var(--primary);
+      }
+      .stat-card p {
+        color: #6b7280;
+        margin-bottom: 0;
+      }
+
+      .admin-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .user-avatar-small {
+        width: 40px;
+        height: 40px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        margin-right: 12px;
+      }
+
+      .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid var(--primary);
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+      .btn-sm {
+        margin: 0 2px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          z-index: 1000;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="text-center pt-4 pb-4">
+          <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+          <h4>SkillSwap</h4>
+          <span class="badge bg-danger mt-2">Admin Panel</span>
+        </div>
+        <div class="user-info text-center mb-4" id="userInfo">
+          <div class="user-avatar mx-auto" id="userAvatar">AU</div>
+          <h6 id="userName">Admin User</h6>
+          <small id="userEmail">admin@skillswap.com</small>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="admin.html"
+            ><i class="fas fa-tachometer-alt"></i>Dashboard</a
+          >
+          <a class="nav-link" href="dashboard.html"
+            ><i class="fas fa-home"></i>User Dashboard</a
+          >
+          <a class="nav-link" href="#" id="logoutBtn"
+            ><i class="fas fa-sign-out-alt"></i>Logout</a
+          >
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="container-fluid">
+          <!-- Header -->
+          <div
+            class="admin-header p-4 rounded-4 mb-4"
+            style="background: var(--gradient); color: white"
+          >
+            <h2><i class="fas fa-crown me-2"></i>Admin Dashboard</h2>
+            <p class="mb-0">Manage users and monitor platform activity</p>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="row mb-4" id="statsContainer">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <h3 id="totalUsers">0</h3>
+                <p>Total Users</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <h3 id="totalSessions">0</h3>
+                <p>Total Sessions</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <h3 id="completedSessions">0</h3>
+                <p>Completed Sessions</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <h3 id="avgRating">0</h3>
+                <p>Average Rating</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Management -->
+          <div class="admin-card">
+            <h5 class="mb-3">
+              <i class="fas fa-users me-2"></i>User Management
+            </h5>
+            <div class="mb-3 d-flex gap-2 flex-wrap">
+              <input
+                type="text"
+                class="form-control"
+                id="searchUsers"
+                placeholder="Search users by name or email..."
+                style="max-width: 300px"
+              />
+              <button class="btn btn-primary" onclick="addSampleData()">
+                <i class="fas fa-plus"></i> Add Sample Users
+              </button>
+              <button class="btn btn-success" onclick="exportData()">
+                <i class="fas fa-download"></i> Export Data
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Teach Skills</th>
+                    <th>Learn Skills</th>
+                    <th>Status</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTable">
+                  <tr>
+                    <td colspan="7" class="text-center">
+                      <div class="spinner-border text-primary"></div>
+                      Loading...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ============================================
+      // COMPLETE WORKING ADMIN PANEL - LOCALSTORAGE VERSION
+      // ============================================
+
+      // Initialize default data
+      function initializeData() {
+        let users = JSON.parse(localStorage.getItem("users"));
+
+        if (!users || users.length === 0) {
+          const defaultUsers = [
+            {
+              id: 1,
+              firstName: "Admin",
+              lastName: "User",
+              email: "admin@skillswap.com",
+              password: "admin123",
+              teachSkills: [],
+              learnSkills: [],
+              rating: 5,
+              isAdmin: true,
+              isActive: true,
+              createdAt: new Date().toISOString(),
+            },
+            {
+              id: 2,
+              firstName: "John",
+              lastName: "Doe",
+              email: "john@example.com",
+              password: "password123",
+              teachSkills: ["JavaScript", "React", "Node.js"],
+              learnSkills: ["Python"],
+              rating: 4.5,
+              isAdmin: false,
+              isActive: true,
+              createdAt: new Date().toISOString(),
+            },
+            {
+              id: 3,
+              firstName: "Jane",
+              lastName: "Smith",
+              email: "jane@example.com",
+              password: "password123",
+              teachSkills: ["Python", "Data Science", "SQL"],
+              learnSkills: ["JavaScript", "React"],
+              rating: 5,
+              isAdmin: false,
+              isActive: true,
+              createdAt: new Date().toISOString(),
+            },
+          ];
+          localStorage.setItem("users", JSON.stringify(defaultUsers));
+        }
+
+        if (!localStorage.getItem("sessions")) {
+          localStorage.setItem("sessions", JSON.stringify([]));
+        }
+
+        if (!localStorage.getItem("reviews")) {
+          localStorage.setItem("reviews", JSON.stringify([]));
+        }
+      }
+
+      // Show toast notification
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = "toast-notification";
+        toast.style.borderLeftColor =
+          type === "success"
+            ? "#10b981"
+            : type === "error"
+              ? "#ef4444"
+              : "#f59e0b";
+        toast.innerHTML = `<i class="fas ${type === "success" ? "fa-check-circle" : type === "error" ? "fa-exclamation-circle" : "fa-exclamation-triangle"} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      // Check authentication
+      function checkAuth() {
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        if (!currentUser) {
+          window.location.href = "index.html";
+          return false;
+        }
+
+        if (!currentUser.isAdmin) {
+          alert("Access denied. Admin only.");
+          window.location.href = "dashboard.html";
+          return false;
+        }
+
+        // Display user info in sidebar
+        document.getElementById("userAvatar").innerText =
+          currentUser.firstName[0] + currentUser.lastName[0];
+        document.getElementById("userName").innerText =
+          currentUser.firstName + " " + currentUser.lastName;
+        document.getElementById("userEmail").innerText = currentUser.email;
+
+        return true;
+      }
+
+      // Load statistics
+      function loadStats() {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const sessions = JSON.parse(localStorage.getItem("sessions")) || [];
+        const reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+        document.getElementById("totalUsers").innerText = users.length;
+        document.getElementById("totalSessions").innerText = sessions.length;
+        document.getElementById("completedSessions").innerText =
+          sessions.filter((s) => s.status === "completed").length;
+
+        const avgRating = reviews.length
+          ? (
+              reviews.reduce((a, b) => a + b.rating, 0) / reviews.length
+            ).toFixed(1)
+          : 0;
+        document.getElementById("avgRating").innerText = avgRating;
+      }
+
+      // Render stars for rating
+      function renderStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+          if (i <= (rating || 0)) {
+            stars +=
+              '<i class="fas fa-star" style="color: #fbbf24; font-size: 0.8rem;"></i>';
+          } else {
+            stars +=
+              '<i class="far fa-star" style="color: #d1d5db; font-size: 0.8rem;"></i>';
+          }
+        }
+        return stars;
+      }
+
+      // Load users table
+      function loadUsers(searchTerm = "") {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase();
+          users = users.filter(
+            (u) =>
+              u.firstName.toLowerCase().includes(term) ||
+              u.lastName.toLowerCase().includes(term) ||
+              u.email.toLowerCase().includes(term),
+          );
+        }
+
+        const container = document.getElementById("usersTable");
+
+        if (users.length === 0) {
+          container.innerHTML =
+            '<tr><td colspan="7" class="text-center">No users found</td></tr>';
+          return;
+        }
+
+        let html = "";
+        users.forEach((user) => {
+          const statusClass = user.isActive !== false ? "success" : "danger";
+          const statusText = user.isActive !== false ? "Active" : "Inactive";
+          const adminBadge = user.isAdmin
+            ? '<span class="badge bg-danger ms-1">Admin</span>'
+            : "";
+          const teachSkills =
+            user.teachSkills?.slice(0, 3).join(", ") +
+              (user.teachSkills?.length > 3 ? "..." : "") || "None";
+          const learnSkills =
+            user.learnSkills?.slice(0, 3).join(", ") +
+              (user.learnSkills?.length > 3 ? "..." : "") || "None";
+
+          html += `
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="user-avatar-small">${user.firstName[0]}${user.lastName[0]}</div>
+                        <div>
+                            <strong>${user.firstName} ${user.lastName}</strong>
+                            ${adminBadge}
+                        </div>
+                    </div>
+                </td>
+                <td>${user.email}</td>
+                <td><small>${teachSkills}</small></td>
+                <td><small>${learnSkills}</small></td>
+                <td><span class="badge bg-${statusClass}">${statusText}</span></td>
+                <td>${renderStars(user.rating)}</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="toggleUserStatus(${user.id})" title="Toggle Status">
+                        <i class="fas ${user.isActive !== false ? "fa-ban" : "fa-check"}"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})" title="Delete User">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                 </td>
+            </tr>
+        `;
+        });
+        container.innerHTML = html;
+      }
+
+      // Toggle user status
+      function toggleUserStatus(userId) {
+        if (
+          !confirm(
+            "Toggle user status? This will activate/deactivate the user account.",
+          )
+        )
+          return;
+
+        const users = JSON.parse(localStorage.getItem("users"));
+        const userIndex = users.findIndex((u) => u.id === userId);
+
+        if (userIndex !== -1) {
+          users[userIndex].isActive =
+            users[userIndex].isActive === false ? true : false;
+          localStorage.setItem("users", JSON.stringify(users));
+
+          loadStats();
+          loadUsers(document.getElementById("searchUsers").value);
+          showToast(
+            `User status updated to ${users[userIndex].isActive ? "Active" : "Inactive"}`,
+            "success",
+          );
+        }
+      }
+
+      // Delete user
+      function deleteUser(userId) {
+        const userToDelete = JSON.parse(localStorage.getItem("users")).find(
+          (u) => u.id === userId,
+        );
+        const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+        if (currentUser.id === userId) {
+          alert("You cannot delete your own account!");
+          return;
+        }
+
+        if (
+          !confirm(
+            `⚠️ WARNING: This will permanently delete ${userToDelete?.firstName} ${userToDelete?.lastName} and ALL their data!\n\nThis cannot be undone!\n\nAre you absolutely sure?`,
+          )
+        )
+          return;
+
+        let users = JSON.parse(localStorage.getItem("users"));
+        users = users.filter((u) => u.id !== userId);
+        localStorage.setItem("users", JSON.stringify(users));
+
+        // Delete user's sessions
+        let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
+        sessions = sessions.filter(
+          (s) => s.teacherId !== userId && s.studentId !== userId,
+        );
+        localStorage.setItem("sessions", JSON.stringify(sessions));
+
+        // Delete user's reviews
+        let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+        reviews = reviews.filter(
+          (r) => r.reviewerId !== userId && r.revieweeId !== userId,
+        );
+        localStorage.setItem("reviews", JSON.stringify(reviews));
+
+        loadStats();
+        loadUsers(document.getElementById("searchUsers").value);
+        showToast(
+          `User ${userToDelete?.firstName} ${userToDelete?.lastName} deleted successfully`,
+          "success",
+        );
+      }
+
+      // Add sample users
+      function addSampleData() {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const currentMaxId =
+          users.length > 0 ? Math.max(...users.map((u) => u.id)) : 0;
+
+        const sampleUsers = [
+          {
+            id: currentMaxId + 1,
+            firstName: "Mike",
+            lastName: "Johnson",
+            email: "mike@example.com",
+            password: "password123",
+            teachSkills: ["UI/UX Design", "Figma", "Adobe XD"],
+            learnSkills: ["React", "JavaScript"],
+            rating: 4.2,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: currentMaxId + 2,
+            firstName: "Sarah",
+            lastName: "Wilson",
+            email: "sarah@example.com",
+            password: "password123",
+            teachSkills: ["Digital Marketing", "SEO", "Content Strategy"],
+            learnSkills: ["Data Science", "Python"],
+            rating: 4.8,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: currentMaxId + 3,
+            firstName: "Ali",
+            lastName: "Asad",
+            email: "ali@example.com",
+            password: "password123",
+            teachSkills: ["PHP", "Laravel", "MySQL"],
+            learnSkills: ["React Native", "Flutter"],
+            rating: 4.5,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+        ];
+
+        users.push(...sampleUsers);
+        localStorage.setItem("users", JSON.stringify(users));
+
+        loadStats();
+        loadUsers();
+        showToast("3 sample users added successfully!", "success");
+      }
+
+      // Export data to CSV
+      function exportData() {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        if (users.length === 0) {
+          showToast("No data to export", "error");
+          return;
+        }
+
+        let csvContent =
+          "ID,First Name,Last Name,Email,Teach Skills,Learn Skills,Rating,Status,Admin,Joined\n";
+
+        users.forEach((user) => {
+          const row = [
+            user.id,
+            user.firstName,
+            user.lastName,
+            user.email,
+            (user.teachSkills || []).join("; "),
+            (user.learnSkills || []).join("; "),
+            user.rating || 0,
+            user.isActive !== false ? "Active" : "Inactive",
+            user.isAdmin ? "Yes" : "No",
+            new Date(user.createdAt).toLocaleDateString(),
+          ].join(",");
+          csvContent += row + "\n";
+        });
+
+        const blob = new Blob([csvContent], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `skillswap_users_${new Date().toISOString().split("T")[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+
+        showToast("Data exported successfully!", "success");
+      }
+
+      // Logout
+      function logout() {
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+      }
+
+      // Search functionality
+      document.getElementById("searchUsers")?.addEventListener("input", (e) => {
+        loadUsers(e.target.value);
+      });
+
+      // Logout button
+      document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        logout();
+      });
+
+      // Initialize everything
+      initializeData();
+
+      if (checkAuth()) {
+        loadStats();
+        loadUsers();
+      }
+
+      // Make functions global for onclick
+      window.toggleUserStatus = toggleUserStatus;
+      window.deleteUser = deleteUser;
+      window.addSampleData = addSampleData;
+      window.exportData = exportData;
+      window.logout = logout;
+    </script>
+  </body>
+</html>

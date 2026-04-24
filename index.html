@@ -1,0 +1,1333 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillSwap - Exchange Skills, Grow Together</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        --gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      }
+
+      .navbar {
+        padding: 1rem 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s;
+      }
+
+      .navbar-brand {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .btn-primary-gradient {
+        background: var(--gradient);
+        color: white;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .btn-primary-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        color: white;
+      }
+
+      .hero-section {
+        background: var(--gradient);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-top: 80px;
+        position: relative;
+      }
+
+      .hero-section h1 {
+        color: white;
+        font-weight: 800;
+      }
+      .gradient-text {
+        background: linear-gradient(135deg, #fff, #e0e7ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .feature-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        text-align: center;
+        transition: all 0.3s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 100%;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        color: white;
+        font-size: 2rem;
+      }
+
+      .how-it-works-section {
+        background: var(--gradient-dark);
+        padding: 80px 0;
+      }
+      .how-it-works-section .section-title {
+        color: white;
+      }
+
+      .workflow-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        padding-left: 4rem;
+        position: relative;
+      }
+
+      .step-number {
+        position: absolute;
+        left: 0;
+        width: 3rem;
+        height: 3rem;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
+
+      .step-content {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        backdrop-filter: blur(10px);
+        width: 100%;
+      }
+
+      .step-content h4 {
+        color: white;
+      }
+      .step-content p {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .testimonial-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 100%;
+      }
+
+      .testimonial-rating {
+        color: #fbbf24;
+        margin-bottom: 1rem;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .testimonial-author img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .team-section {
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        padding: 80px 0;
+      }
+      .team-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        text-align: center;
+        transition: all 0.3s;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        height: 100%;
+      }
+      .team-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 30px -12px rgba(0, 0, 0, 0.2);
+      }
+      .team-avatar {
+        width: 120px;
+        height: 120px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: white;
+      }
+      .team-name {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .team-role {
+        color: var(--primary);
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+      .team-bio {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+      .team-social {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+      .team-social a {
+        width: 35px;
+        height: 35px;
+        background: #f3f4f6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        transition: all 0.3s;
+      }
+      .team-social a:hover {
+        background: var(--gradient);
+        color: white;
+      }
+
+      .cta-section {
+        background: var(--gradient);
+        padding: 80px 0;
+      }
+      .cta-wrapper {
+        text-align: center;
+        color: white;
+        padding: 3rem;
+        border-radius: 1.5rem;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+
+      .footer {
+        background: #111827;
+        color: #9ca3af;
+        padding: 60px 0 20px;
+      }
+      .footer-brand {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      .social-links a {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.3s;
+      }
+      .social-links a:hover {
+        background: var(--primary);
+        transform: translateY(-3px);
+      }
+
+      .section-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+      }
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: var(--gradient);
+        border-radius: 50px;
+      }
+
+      .toast-notification {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+        border-left: 4px solid;
+        animation: slideIn 0.3s ease;
+      }
+      .toast-success {
+        border-left-color: #10b981;
+      }
+      .toast-error {
+        border-left-color: #ef4444;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .section-title {
+          font-size: 2rem;
+        }
+        .workflow-item {
+          padding-left: 0;
+          flex-direction: column;
+        }
+        .step-number {
+          position: relative;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="index.html"
+          ><i class="fas fa-exchange-alt me-2"></i>SkillSwap</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#how-it-works">How It Works</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#testimonials">Testimonials</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#team">Our Team</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="btn btn-primary-gradient ms-3"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+                >Get Started</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+      <div class="container">
+        <div class="row align-items-center min-vh-100">
+          <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4">
+              Exchange Skills,<br /><span class="gradient-text"
+                >Grow Together</span
+              >
+            </h1>
+            <p class="lead mb-4">
+              Join thousands of learners and teachers in our peer-to-peer skill
+              exchange platform.
+            </p>
+            <div class="d-flex gap-3 flex-wrap">
+              <a
+                href="#"
+                class="btn btn-primary-gradient btn-lg"
+                data-bs-toggle="modal"
+                data-bs-target="#registerModal"
+                >Start Learning Free <i class="fas fa-arrow-right ms-2"></i
+              ></a>
+              <a href="#how-it-works" class="btn btn-outline-light btn-lg"
+                >How It Works</a
+              >
+            </div>
+            <div class="mt-5 d-flex gap-4 flex-wrap">
+              <div>
+                <i class="fas fa-users me-2"></i>
+                <strong>2,500+</strong> Learners
+              </div>
+              <div>
+                <i class="fas fa-chalkboard-user me-2"></i>
+                <strong>1,200+</strong> Teachers
+              </div>
+              <div>
+                <i class="fas fa-star text-warning me-2"></i>
+                <strong>4.8</strong> Rating
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <img
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600"
+              alt="Learning"
+              class="img-fluid rounded-4 shadow-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features" class="py-5">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="section-title">Why Choose SkillSwap?</h2>
+          <p class="text-muted">
+            Everything you need to exchange knowledge effectively
+          </p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-brain"></i></div>
+              <h4>Smart Matching</h4>
+              <p>
+                AI-powered algorithm connects you with perfect learning
+                partners.
+              </p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-calendar-check"></i>
+              </div>
+              <h4>Flexible Scheduling</h4>
+              <p>Choose date, time, online or offline sessions.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+              <h4>Track Progress</h4>
+              <p>Monitor your learning journey with detailed tracking.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-comments"></i></div>
+              <h4>Real-time Chat</h4>
+              <p>Communicate instantly with learning partners.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-star"></i></div>
+              <h4>Rate & Review</h4>
+              <p>Build trust through transparent ratings.</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+              <h4>Safe & Secure</h4>
+              <p>Verified profiles and 24/7 moderation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works-section">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="section-title">How It Works</h2>
+          <p class="text-white-50">Get started in 5 simple steps</p>
+        </div>
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <div class="workflow-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Create Your Profile</h4>
+                <p>Register and tell us about your skills.</p>
+              </div>
+            </div>
+            <div class="workflow-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Add Skills</h4>
+                <p>List what you can teach and want to learn.</p>
+              </div>
+            </div>
+            <div class="workflow-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Get Matched</h4>
+                <p>Our algorithm finds compatible partners.</p>
+              </div>
+            </div>
+            <div class="workflow-item">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h4>Schedule Sessions</h4>
+                <p>Choose time and mode for learning.</p>
+              </div>
+            </div>
+            <div class="workflow-item">
+              <div class="step-number">5</div>
+              <div class="step-content">
+                <h4>Learn & Grow</h4>
+                <p>Exchange knowledge and track progress.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="py-5 bg-light">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="section-title">What Our Users Say</h2>
+          <p class="text-muted">Join thousands of satisfied learners</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="testimonial-card">
+              <div class="testimonial-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i>
+              </div>
+              <p>
+                "SkillSwap transformed how I learn. Found an amazing Python
+                mentor!"
+              </p>
+              <div class="testimonial-author">
+                <img src="https://randomuser.me/api/portraits/women/1.jpg" />
+                <div>
+                  <h6>Sarah Johnson</h6>
+                  <small>Python Learner</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="testimonial-card">
+              <div class="testimonial-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i>
+              </div>
+              <p>
+                "Teaching React has been rewarding. Helped over 50 students!"
+              </p>
+              <div class="testimonial-author">
+                <img src="https://randomuser.me/api/portraits/men/2.jpg" />
+                <div>
+                  <h6>Michael Chen</h6>
+                  <small>React Instructor</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="testimonial-card">
+              <div class="testimonial-rating">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i><i class="fas fa-star"></i
+                ><i class="fas fa-star"></i>
+              </div>
+              <p>
+                "Found the perfect UI/UX mentor who helped me land my dream
+                job!"
+              </p>
+              <div class="testimonial-author">
+                <img src="https://randomuser.me/api/portraits/women/2.jpg" />
+                <div>
+                  <h6>Emma Davis</h6>
+                  <small>UI/UX Designer</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="team" class="team-section">
+      <div class="container">
+        <div class="text-center mb-5">
+          <h2 class="section-title">Meet Our Team</h2>
+          <p class="text-muted">The passionate people behind SkillSwap</p>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <div class="team-avatar"><i class="fas fa-user"></i></div>
+              <h3 class="team-name">Ali Asad</h3>
+              <div class="team-role">Lead Developer & Founder</div>
+              <p class="team-bio">
+                Full-stack developer with 3+ years of experience.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a
+                ><a href="#"><i class="fab fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <div class="team-avatar"><i class="fas fa-user"></i></div>
+              <h3 class="team-name">Ali Zain</h3>
+              <div class="team-role">UI/UX Designer</div>
+              <p class="team-bio">
+                Creative designer specializing in user-centered design.
+              </p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a
+                ><a href="#"><i class="fab fa-dribbble"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <div class="team-avatar"><i class="fas fa-user"></i></div>
+              <h3 class="team-name">Taha</h3>
+              <div class="team-role">Backend Engineer</div>
+              <p class="team-bio">Database expert and API architect.</p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a
+                ><a href="#"><i class="fab fa-github"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <div class="team-avatar"><i class="fas fa-user"></i></div>
+              <h3 class="team-name">Qasim</h3>
+              <div class="team-role">Community Manager</div>
+              <p class="team-bio">Passionate about building communities.</p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a
+                ><a href="#"><i class="fab fa-twitter"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="team-card">
+              <div class="team-avatar"><i class="fas fa-user"></i></div>
+              <h3 class="team-name">Tayyaba</h3>
+              <div class="team-role">Content Strategist</div>
+              <p class="team-bio">Creates engaging learning resources.</p>
+              <div class="team-social">
+                <a href="#"><i class="fab fa-linkedin-in"></i></a
+                ><a href="#"><i class="fab fa-medium"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <div class="container">
+        <div class="cta-wrapper">
+          <h2 class="mb-3">Ready to Start Your Learning Journey?</h2>
+          <p class="mb-4">
+            Join SkillSwap today and connect with thousands of learners.
+          </p>
+          <a
+            href="#"
+            class="btn btn-light btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#registerModal"
+            >Get Started Free <i class="fas fa-arrow-right ms-2"></i
+          ></a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="footer-brand">
+              <i class="fas fa-exchange-alt me-2"></i>SkillSwap
+            </div>
+            <p class="mt-3">
+              Empowering people to share knowledge and grow together through
+              peer-to-peer learning.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a
+              ><a href="#"><i class="fab fa-twitter"></i></a
+              ><a href="#"><i class="fab fa-linkedin-in"></i></a
+              ><a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div class="col-md-2 mb-4">
+            <h5>Platform</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a
+                  href="#how-it-works"
+                  class="text-decoration-none text-white-50"
+                  >How It Works</a
+                >
+              </li>
+              <li>
+                <a href="#features" class="text-decoration-none text-white-50"
+                  >Features</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Pricing</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-decoration-none text-white-50">FAQ</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-2 mb-4">
+            <h5>Community</h5>
+            <ul class="list-unstyled">
+              <li>
+                <a href="#" class="text-decoration-none text-white-50">Blog</a>
+              </li>
+              <li>
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Success Stories</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Guidelines</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-decoration-none text-white-50"
+                  >Become a Teacher</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4 mb-4">
+            <h5>Newsletter</h5>
+            <p>Subscribe to get updates on new features.</p>
+            <div class="input-group">
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Your email"
+              /><button class="btn btn-primary-gradient">Subscribe</button>
+            </div>
+          </div>
+        </div>
+        <hr class="bg-secondary" />
+        <div class="text-center">
+          <p class="mb-0">
+            &copy; 2024 SkillSwap. All rights reserved. | Made with
+            <i class="fas fa-heart text-danger"></i> by Team SkillSwap
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">Welcome Back</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label class="form-label">Email</label
+                ><input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label
+                ><input
+                  type="password"
+                  class="form-control"
+                  id="loginPassword"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary-gradient w-100">
+                Login
+              </button>
+            </form>
+            <div class="text-center mt-3">
+              <p class="mb-0">
+                Don't have an account?
+                <a
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#registerModal"
+                  >Sign up</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">Create Account</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="registerForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">First Name</label
+                  ><input
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Last Name</label
+                  ><input
+                    type="text"
+                    class="form-control"
+                    id="lastName"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label
+                ><input
+                  type="email"
+                  class="form-control"
+                  id="registerEmail"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label
+                ><input
+                  type="password"
+                  class="form-control"
+                  id="registerPassword"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Confirm Password</label
+                ><input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  required
+                />
+              </div>
+              <hr />
+              <h6 class="mb-3">Your Skills</h6>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Skills you can teach (comma separated)</label
+                ><input
+                  type="text"
+                  class="form-control"
+                  id="teachSkills"
+                  placeholder="JavaScript, Python, Design"
+                />
+              </div>
+              <div class="mb-3">
+                <label class="form-label"
+                  >Skills you want to learn (comma separated)</label
+                ><input
+                  type="text"
+                  class="form-control"
+                  id="learnSkills"
+                  placeholder="React, Data Science, Marketing"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary-gradient w-100">
+                Create Account
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ============================================
+      // COMPLETE WORKING AUTHENTICATION WITH DUMMY DATA
+      // ============================================
+
+      // Initialize dummy data
+      function initDummyData() {
+        // Check if data already exists
+        if (localStorage.getItem("users")) {
+          console.log("Data already exists, skipping initialization");
+          return;
+        }
+
+        console.log("Initializing dummy data...");
+
+        // Create 10 users with plain text passwords
+        const users = [
+          {
+            id: 1,
+            firstName: "Admin",
+            lastName: "User",
+            email: "admin@skillswap.com",
+            password: "admin123",
+            bio: "Platform administrator",
+            teachSkills: ["Leadership", "Project Management"],
+            learnSkills: ["React", "Python"],
+            rating: 5,
+            isAdmin: true,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 2,
+            firstName: "John",
+            lastName: "Doe",
+            email: "john@example.com",
+            password: "password123",
+            bio: "Full-stack developer",
+            teachSkills: ["JavaScript", "React", "Node.js"],
+            learnSkills: ["Python", "Data Science"],
+            rating: 4.8,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 3,
+            firstName: "Jane",
+            lastName: "Smith",
+            email: "jane@example.com",
+            password: "password123",
+            bio: "Data scientist",
+            teachSkills: ["Python", "Data Science", "Machine Learning"],
+            learnSkills: ["React", "JavaScript"],
+            rating: 4.9,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 4,
+            firstName: "Mike",
+            lastName: "Johnson",
+            email: "mike@example.com",
+            password: "password123",
+            bio: "UI/UX Designer",
+            teachSkills: ["UI/UX Design", "Figma"],
+            learnSkills: ["React", "JavaScript"],
+            rating: 4.5,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 5,
+            firstName: "Sarah",
+            lastName: "Wilson",
+            email: "sarah@example.com",
+            password: "password123",
+            bio: "Digital Marketer",
+            teachSkills: ["Digital Marketing", "SEO"],
+            learnSkills: ["Data Science", "Python"],
+            rating: 4.2,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 6,
+            firstName: "Ali",
+            lastName: "Asad",
+            email: "ali@example.com",
+            password: "password123",
+            bio: "Backend Developer",
+            teachSkills: ["PHP", "Laravel"],
+            learnSkills: ["React", "Node.js"],
+            rating: 4.7,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 7,
+            firstName: "Emma",
+            lastName: "Davis",
+            email: "emma@example.com",
+            password: "password123",
+            bio: "Photographer",
+            teachSkills: ["Photography", "Video Editing"],
+            learnSkills: ["Digital Marketing"],
+            rating: 4.6,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 8,
+            firstName: "Ahmad",
+            lastName: "Khan",
+            email: "ahmad@example.com",
+            password: "password123",
+            bio: "Project Manager",
+            teachSkills: ["Project Management"],
+            learnSkills: ["Public Speaking", "Leadership"],
+            rating: 4.4,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 9,
+            firstName: "Fatima",
+            lastName: "Rizvi",
+            email: "fatima@example.com",
+            password: "password123",
+            bio: "Business Analyst",
+            teachSkills: ["Excel"],
+            learnSkills: ["SQL", "Data Science"],
+            rating: 4.9,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: 10,
+            firstName: "Bilal",
+            lastName: "Hassan",
+            email: "bilal@example.com",
+            password: "password123",
+            bio: "DevOps Engineer",
+            teachSkills: ["AWS", "Docker"],
+            learnSkills: ["Python", "Machine Learning"],
+            rating: 4.8,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          },
+        ];
+        localStorage.setItem("users", JSON.stringify(users));
+
+        // Create sample sessions
+        const sessions = [
+          {
+            id: 1,
+            teacherId: 2,
+            studentId: 3,
+            topic: "JavaScript Fundamentals",
+            date: "2024-03-25",
+            time: "14:00",
+            mode: "online",
+            status: "completed",
+          },
+          {
+            id: 2,
+            teacherId: 3,
+            studentId: 2,
+            topic: "Python Data Analysis",
+            date: "2024-03-26",
+            time: "15:00",
+            mode: "online",
+            status: "completed",
+          },
+          {
+            id: 3,
+            teacherId: 2,
+            studentId: 4,
+            topic: "React Hooks Deep Dive",
+            date: "2024-03-27",
+            time: "10:00",
+            mode: "online",
+            status: "pending",
+          },
+        ];
+        localStorage.setItem("sessions", JSON.stringify(sessions));
+
+        // Create sample messages
+        const messages = [
+          {
+            id: 1,
+            senderId: 2,
+            receiverId: 3,
+            message: "Hi Jane! Want to learn Python.",
+            timestamp: new Date().toISOString(),
+            isRead: true,
+          },
+          {
+            id: 2,
+            senderId: 3,
+            receiverId: 2,
+            message: "Hi John! Sure, when are you free?",
+            timestamp: new Date().toISOString(),
+            isRead: false,
+          },
+        ];
+        localStorage.setItem("messages", JSON.stringify(messages));
+
+        // Create sample match requests
+        const matchRequests = [
+          {
+            id: 1,
+            fromUserId: 4,
+            toUserId: 2,
+            message: "Want to learn React!",
+            status: "pending",
+            createdAt: new Date().toISOString(),
+          },
+        ];
+        localStorage.setItem("matchRequests", JSON.stringify(matchRequests));
+
+        // Create sample reviews
+        const reviews = [
+          {
+            id: 1,
+            sessionId: 1,
+            reviewerId: 3,
+            revieweeId: 2,
+            rating: 5,
+            feedback: "Excellent!",
+            createdAt: new Date().toISOString(),
+          },
+        ];
+        localStorage.setItem("reviews", JSON.stringify(reviews));
+
+        console.log("✅ Dummy data initialized!");
+        console.log("📊 Users added:", users.length);
+        console.log("🔑 Login with: admin@skillswap.com / admin123");
+      }
+
+      // Show toast notification
+      function showToast(message, type) {
+        const toast = document.createElement("div");
+        toast.className = `toast-notification toast-${type}`;
+        toast.innerHTML = `<i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-circle"} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      // Login handler
+      document
+        .getElementById("loginForm")
+        ?.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const email = document.getElementById("loginEmail").value;
+          const password = document.getElementById("loginPassword").value;
+          const users = JSON.parse(localStorage.getItem("users"));
+
+          if (!users) {
+            showToast("Please refresh the page and try again", "error");
+            return;
+          }
+
+          const user = users.find(
+            (u) => u.email === email && u.password === password,
+          );
+
+          if (user) {
+            if (user.isActive === false) {
+              showToast("Your account is deactivated", "error");
+              return;
+            }
+            localStorage.setItem("currentUser", JSON.stringify(user));
+            showToast("Login successful! Redirecting...", "success");
+            setTimeout(() => {
+              if (user.isAdmin === true) {
+                window.location.href = "admin.html";
+              } else {
+                window.location.href = "dashboard.html";
+              }
+            }, 1000);
+          } else {
+            showToast("Invalid email or password", "error");
+          }
+        });
+
+      // Register handler
+      document
+        .getElementById("registerForm")
+        ?.addEventListener("submit", function (e) {
+          e.preventDefault();
+          const password = document.getElementById("registerPassword").value;
+          const confirm = document.getElementById("confirmPassword").value;
+
+          if (password !== confirm) {
+            showToast("Passwords do not match", "error");
+            return;
+          }
+
+          const users = JSON.parse(localStorage.getItem("users"));
+          const email = document.getElementById("registerEmail").value;
+
+          if (users.some((u) => u.email === email)) {
+            showToast("Email already exists", "error");
+            return;
+          }
+
+          const newUser = {
+            id: users.length + 1,
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value,
+            email: email,
+            password: password,
+            teachSkills: document
+              .getElementById("teachSkills")
+              .value.split(",")
+              .map((s) => s.trim())
+              .filter((s) => s),
+            learnSkills: document
+              .getElementById("learnSkills")
+              .value.split(",")
+              .map((s) => s.trim())
+              .filter((s) => s),
+            rating: 0,
+            isAdmin: false,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+          };
+
+          users.push(newUser);
+          localStorage.setItem("users", JSON.stringify(users));
+          showToast("Registration successful! Please login.", "success");
+
+          const registerModal = bootstrap.Modal.getInstance(
+            document.getElementById("registerModal"),
+          );
+          registerModal.hide();
+          new bootstrap.Modal(document.getElementById("loginModal")).show();
+          document.getElementById("registerForm").reset();
+        });
+
+      // Initialize dummy data on page load
+      initDummyData();
+
+      // Navbar scroll effect
+      window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+          navbar.style.padding = "0.5rem 0";
+          navbar.style.boxShadow = "0 4px 6px -1px rgba(0,0,0,0.1)";
+        } else {
+          navbar.style.padding = "1rem 0";
+          navbar.style.boxShadow = "none";
+        }
+      });
+
+      console.log("Page loaded. Dummy data initialized.");
+    </script>
+  </body>
+</html>

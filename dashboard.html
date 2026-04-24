@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - SkillSwap</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f3f4f6;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        --gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: var(--gradient-dark);
+        color: white;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+      }
+
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s;
+      }
+
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar .nav-link i {
+        width: 24px;
+        margin-right: 12px;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient);
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .stat-card h3 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0;
+      }
+      .stat-card p {
+        color: #6b7280;
+        margin-bottom: 0;
+      }
+
+      .session-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--primary);
+        transition: all 0.3s;
+      }
+
+      .session-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      .match-item {
+        padding: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        transition: all 0.3s;
+      }
+
+      .match-item:hover {
+        background: #f9fafb;
+      }
+
+      .match-avatar {
+        width: 48px;
+        height: 48px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          z-index: 1000;
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <div class="text-center pt-4 pb-4">
+          <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+          <h4>SkillSwap</h4>
+        </div>
+        <div class="user-info text-center mb-4" id="userInfo">
+          <div class="user-avatar mx-auto" id="userAvatar">JD</div>
+          <h6 id="userName">Loading...</h6>
+          <small id="userEmail">Loading...</small>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link active" href="dashboard.html"
+            ><i class="fas fa-home"></i>Dashboard</a
+          >
+          <a class="nav-link" href="profile.html"
+            ><i class="fas fa-user"></i>Profile</a
+          >
+          <a class="nav-link" href="matches.html"
+            ><i class="fas fa-handshake"></i>Matches</a
+          >
+          <a class="nav-link" href="sessions.html"
+            ><i class="fas fa-calendar"></i>Sessions</a
+          >
+          <a class="nav-link" href="chat.html"
+            ><i class="fas fa-comments"></i>Messages</a
+          >
+          <a class="nav-link" href="#" id="logoutBtn"
+            ><i class="fas fa-sign-out-alt"></i>Logout</a
+          >
+        </nav>
+      </div>
+
+      <div class="main-content">
+        <div class="container-fluid">
+          <h2 class="mb-4">Dashboard</h2>
+          <div class="row mb-4" id="statsContainer">
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-chalkboard-user"></i>
+                </div>
+                <h3 id="teachCount">0</h3>
+                <p>Skills to Teach</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 id="learnCount">0</h3>
+                <p>Skills to Learn</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                <h3 id="completedCount">0</h3>
+                <p>Completed Sessions</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                <h3 id="pendingCount">0</h3>
+                <p>Pending Sessions</p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                  <h5 class="mb-0">Upcoming Sessions</h5>
+                </div>
+                <div class="card-body" id="upcomingSessions">
+                  <p class="text-muted text-center">Loading...</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-0">
+                  <h5 class="mb-0">Match Suggestions</h5>
+                </div>
+                <div class="card-body p-0" id="matchSuggestions">
+                  <p class="text-muted text-center p-3">Loading...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (!currentUser) window.location.href = "index.html";
+
+      document.getElementById("userAvatar").innerText =
+        currentUser.firstName[0] + currentUser.lastName[0];
+      document.getElementById("userName").innerText =
+        currentUser.firstName + " " + currentUser.lastName;
+      document.getElementById("userEmail").innerText = currentUser.email;
+      document.getElementById("teachCount").innerText =
+        currentUser.teachSkills?.length || 0;
+      document.getElementById("learnCount").innerText =
+        currentUser.learnSkills?.length || 0;
+
+      let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
+      let userSessions = sessions.filter(
+        (s) => s.teacherId === currentUser.id || s.studentId === currentUser.id,
+      );
+      document.getElementById("completedCount").innerText = userSessions.filter(
+        (s) => s.status === "completed",
+      ).length;
+      document.getElementById("pendingCount").innerText = userSessions.filter(
+        (s) => s.status === "pending",
+      ).length;
+
+      let upcoming = userSessions
+        .filter((s) => s.status !== "completed")
+        .slice(0, 5);
+      let upcomingHtml = "";
+      if (upcoming.length === 0)
+        upcomingHtml =
+          '<p class="text-muted text-center">No upcoming sessions</p>';
+      else
+        upcoming.forEach((s) => {
+          upcomingHtml += `<div class="session-card"><div class="d-flex justify-content-between"><div><h6 class="mb-1">${s.topic || "Learning Session"}</h6><small><i class="fas fa-calendar me-1"></i>${s.date} <i class="fas fa-clock ms-2 me-1"></i>${s.time}</small></div><span class="badge bg-${s.status === "pending" ? "warning" : "success"}">${s.status}</span></div></div>`;
+        });
+      document.getElementById("upcomingSessions").innerHTML = upcomingHtml;
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      let matches = [];
+      users.forEach((u) => {
+        if (u.id !== currentUser.id) {
+          let commonTeach = (u.teachSkills || []).filter((s) =>
+            (currentUser.learnSkills || []).includes(s),
+          );
+          let commonLearn = (u.learnSkills || []).filter((s) =>
+            (currentUser.teachSkills || []).includes(s),
+          );
+          if (commonTeach.length > 0 || commonLearn.length > 0)
+            matches.push({
+              user: u,
+              score: (commonTeach.length + commonLearn.length) * 10,
+            });
+        }
+      });
+      matches.sort((a, b) => b.score - a.score);
+      let matchesHtml = "";
+      if (matches.length === 0)
+        matchesHtml =
+          '<p class="text-muted text-center p-3">No matches found</p>';
+      else
+        matches.slice(0, 3).forEach((m) => {
+          matchesHtml += `<div class="match-item d-flex align-items-center"><div class="match-avatar me-3">${m.user.firstName[0]}${m.user.lastName[0]}</div><div class="flex-grow-1"><h6 class="mb-0">${m.user.firstName} ${m.user.lastName}</h6><small>${m.score}% Match</small></div><button class="btn btn-sm btn-primary" onclick="alert('Connection request sent!')"><i class="fas fa-handshake"></i></button></div>`;
+        });
+      document.getElementById("matchSuggestions").innerHTML = matchesHtml;
+
+      document
+        .getElementById("logoutBtn")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          localStorage.removeItem("currentUser");
+          window.location.href = "index.html";
+        });
+    </script>
+  </body>
+</html>

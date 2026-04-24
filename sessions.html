@@ -1,0 +1,741 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Sessions - SkillSwap</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: #f3f4f6;
+      }
+
+      :root {
+        --primary: #6366f1;
+        --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        --gradient-dark: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: var(--gradient-dark);
+        color: white;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar .user-avatar {
+        width: 80px;
+        height: 80px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        margin: 0 auto 1rem;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 0.75rem 1.5rem;
+        transition: all 0.3s;
+        display: block;
+        text-decoration: none;
+      }
+
+      .sidebar .nav-link:hover,
+      .sidebar .nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar .nav-link i {
+        width: 24px;
+        margin-right: 12px;
+      }
+
+      .main-content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 2rem;
+      }
+
+      .session-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid var(--primary);
+        transition: all 0.3s;
+      }
+
+      .session-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .session-card.completed {
+        border-left-color: #10b981;
+      }
+      .session-card.pending {
+        border-left-color: #f59e0b;
+      }
+      .session-card.accepted {
+        border-left-color: #6366f1;
+      }
+      .session-card.cancelled {
+        border-left-color: #ef4444;
+      }
+
+      .filter-btn.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      .toast-notification {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-left: 4px solid;
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          transform: translateX(-100%);
+          position: fixed;
+          z-index: 1000;
+        }
+        .main-content {
+          margin-left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <div class="sidebar">
+        <div class="text-center pt-4 pb-4">
+          <i class="fas fa-exchange-alt fa-3x mb-3"></i>
+          <h4>SkillSwap</h4>
+        </div>
+        <div class="user-info text-center mb-4" id="userInfo">
+          <div class="user-avatar mx-auto" id="userAvatar">JD</div>
+          <h6 id="userName">Loading...</h6>
+          <small id="userEmail">Loading...</small>
+        </div>
+        <nav class="nav flex-column">
+          <a class="nav-link" href="dashboard.html"
+            ><i class="fas fa-home"></i>Dashboard</a
+          >
+          <a class="nav-link" href="profile.html"
+            ><i class="fas fa-user"></i>Profile</a
+          >
+          <a class="nav-link" href="matches.html"
+            ><i class="fas fa-handshake"></i>Matches</a
+          >
+          <a class="nav-link active" href="sessions.html"
+            ><i class="fas fa-calendar"></i>Sessions</a
+          >
+          <a class="nav-link" href="chat.html"
+            ><i class="fas fa-comments"></i>Messages</a
+          >
+          <a class="nav-link" href="#" id="logoutBtn"
+            ><i class="fas fa-sign-out-alt"></i>Logout</a
+          >
+        </nav>
+      </div>
+
+      <div class="main-content">
+        <div class="container-fluid">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>My Sessions</h2>
+            <button class="btn btn-primary" onclick="showNewSessionModal()">
+              <i class="fas fa-plus me-2"></i>Schedule Session
+            </button>
+          </div>
+
+          <div class="btn-group mb-4">
+            <button
+              class="btn btn-outline-primary filter-btn active"
+              data-filter="all"
+            >
+              All
+            </button>
+            <button
+              class="btn btn-outline-primary filter-btn"
+              data-filter="pending"
+            >
+              Pending
+            </button>
+            <button
+              class="btn btn-outline-primary filter-btn"
+              data-filter="accepted"
+            >
+              Upcoming
+            </button>
+            <button
+              class="btn btn-outline-primary filter-btn"
+              data-filter="completed"
+            >
+              Completed
+            </button>
+            <button
+              class="btn btn-outline-primary filter-btn"
+              data-filter="cancelled"
+            >
+              Cancelled
+            </button>
+          </div>
+
+          <div id="sessionsContainer">
+            <div class="text-center py-5">
+              <div class="spinner-border text-primary"></div>
+              <p class="mt-2">Loading sessions...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Session Modal -->
+    <div class="modal fade" id="newSessionModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">
+              <i class="fas fa-calendar-plus me-2"></i>Schedule New Session
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="newSessionForm">
+              <div class="mb-3">
+                <label class="form-label">Select Partner</label>
+                <select class="form-select" id="sessionPartner" required>
+                  <option value="">Choose a partner...</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Topic</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="sessionTopic"
+                  placeholder="e.g., React Basics"
+                  required
+                />
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="sessionDate"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Time</label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="sessionTime"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mode</label>
+                <select class="form-select" id="sessionMode">
+                  <option value="online">Online (Video Call)</option>
+                  <option value="offline">Offline (In Person)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary-gradient w-100">
+                Send Request
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ============================================
+      // SESSIONS PAGE - WITH DUMMY DATA
+      // ============================================
+
+      let currentUser = null;
+      let allSessions = [];
+
+      // Initialize dummy sessions data
+      function initDummySessions() {
+        const existingSessions = localStorage.getItem("sessions");
+        if (existingSessions && JSON.parse(existingSessions).length > 0) {
+          allSessions = JSON.parse(existingSessions);
+          return;
+        }
+
+        // Create dummy sessions
+        allSessions = [
+          {
+            id: 1,
+            teacherId: 2,
+            studentId: 1,
+            topic: "JavaScript Fundamentals",
+            date: "2024-03-25",
+            time: "14:00",
+            mode: "online",
+            status: "completed",
+            rating: 5,
+            feedback: "Excellent teacher! Very clear explanations.",
+          },
+          {
+            id: 2,
+            teacherId: 3,
+            studentId: 1,
+            topic: "Python Data Analysis",
+            date: "2024-03-26",
+            time: "15:00",
+            mode: "online",
+            status: "completed",
+            rating: 4,
+            feedback: "Great session, learned a lot!",
+          },
+          {
+            id: 3,
+            teacherId: 2,
+            studentId: 4,
+            topic: "React Hooks Deep Dive",
+            date: "2024-03-27",
+            time: "10:00",
+            mode: "online",
+            status: "completed",
+            rating: 5,
+            feedback: "Best React teacher ever!",
+          },
+          {
+            id: 4,
+            teacherId: 4,
+            studentId: 1,
+            topic: "UI/UX Design Principles",
+            date: "2024-04-05",
+            time: "11:00",
+            mode: "offline",
+            status: "accepted",
+          },
+          {
+            id: 5,
+            teacherId: 3,
+            studentId: 1,
+            topic: "Machine Learning Basics",
+            date: "2024-04-06",
+            time: "13:00",
+            mode: "online",
+            status: "pending",
+          },
+          {
+            id: 6,
+            teacherId: 5,
+            studentId: 1,
+            topic: "Digital Marketing Strategy",
+            date: "2024-04-07",
+            time: "14:30",
+            mode: "online",
+            status: "pending",
+          },
+          {
+            id: 7,
+            teacherId: 6,
+            studentId: 1,
+            topic: "PHP Backend Development",
+            date: "2024-04-08",
+            time: "15:00",
+            mode: "online",
+            status: "accepted",
+          },
+          {
+            id: 8,
+            teacherId: 7,
+            studentId: 1,
+            topic: "Professional Photography",
+            date: "2024-04-09",
+            time: "10:30",
+            mode: "offline",
+            status: "accepted",
+          },
+          {
+            id: 9,
+            teacherId: 8,
+            studentId: 1,
+            topic: "Project Management Workshop",
+            date: "2024-04-10",
+            time: "11:00",
+            mode: "online",
+            status: "pending",
+          },
+          {
+            id: 10,
+            teacherId: 9,
+            studentId: 1,
+            topic: "Advanced Excel Techniques",
+            date: "2024-04-11",
+            time: "14:00",
+            mode: "online",
+            status: "accepted",
+          },
+          {
+            id: 11,
+            teacherId: 1,
+            studentId: 2,
+            topic: "Leadership Skills Training",
+            date: "2024-03-20",
+            time: "10:00",
+            mode: "online",
+            status: "completed",
+            rating: 5,
+            feedback: "Excellent leadership training!",
+          },
+          {
+            id: 12,
+            teacherId: 1,
+            studentId: 3,
+            topic: "Public Speaking Mastery",
+            date: "2024-03-22",
+            time: "14:00",
+            mode: "online",
+            status: "completed",
+            rating: 5,
+            feedback: "Very helpful session!",
+          },
+          {
+            id: 13,
+            teacherId: 2,
+            studentId: 1,
+            topic: "Advanced JavaScript",
+            date: "2024-02-20",
+            time: "14:00",
+            mode: "online",
+            status: "cancelled",
+          },
+          {
+            id: 14,
+            teacherId: 3,
+            studentId: 1,
+            topic: "Python Web Scraping",
+            date: "2024-02-15",
+            time: "11:00",
+            mode: "online",
+            status: "cancelled",
+          },
+        ];
+
+        localStorage.setItem("sessions", JSON.stringify(allSessions));
+        console.log("✅ Dummy sessions initialized:", allSessions.length);
+      }
+
+      function checkAuth() {
+        currentUser = JSON.parse(localStorage.getItem("currentUser"));
+        if (!currentUser) {
+          window.location.href = "index.html";
+          return false;
+        }
+        document.getElementById("userAvatar").innerText =
+          currentUser.firstName[0] + currentUser.lastName[0];
+        document.getElementById("userName").innerText =
+          currentUser.firstName + " " + currentUser.lastName;
+        document.getElementById("userEmail").innerText = currentUser.email;
+        return true;
+      }
+
+      function showToast(message, type = "success") {
+        const toast = document.createElement("div");
+        toast.className = "toast-notification";
+        toast.style.borderLeftColor =
+          type === "success" ? "#10b981" : "#ef4444";
+        toast.innerHTML = `<i class="fas ${type === "success" ? "fa-check-circle" : "fa-exclamation-circle"} me-2"></i>${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+      }
+
+      function renderStars(rating) {
+        let stars = "";
+        for (let i = 1; i <= 5; i++) {
+          if (i <= (rating || 0)) {
+            stars += '<i class="fas fa-star" style="color: #fbbf24;"></i>';
+          } else {
+            stars += '<i class="far fa-star" style="color: #d1d5db;"></i>';
+          }
+        }
+        return stars;
+      }
+
+      function loadSessions(filter = "all") {
+        allSessions = JSON.parse(localStorage.getItem("sessions")) || [];
+
+        // Filter sessions where current user is either teacher or student
+        let userSessions = allSessions.filter(
+          (s) =>
+            s.teacherId === currentUser.id || s.studentId === currentUser.id,
+        );
+
+        if (filter !== "all") {
+          userSessions = userSessions.filter((s) => s.status === filter);
+        }
+
+        const container = document.getElementById("sessionsContainer");
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        if (userSessions.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-5">
+                <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                <h5>No Sessions Found</h5>
+                <p class="text-muted">Schedule your first learning session!</p>
+                <button class="btn btn-primary" onclick="showNewSessionModal()">Schedule a Session</button>
+            </div>
+        `;
+          return;
+        }
+
+        let html = "";
+        userSessions.forEach((session) => {
+          const otherUser = users.find(
+            (u) =>
+              u.id ===
+              (session.teacherId === currentUser.id
+                ? session.studentId
+                : session.teacherId),
+          );
+          const isTeacher = session.teacherId === currentUser.id;
+
+          let statusClass = "secondary";
+          if (session.status === "pending") statusClass = "warning";
+          else if (session.status === "accepted") statusClass = "success";
+          else if (session.status === "completed") statusClass = "info";
+          else if (session.status === "cancelled") statusClass = "danger";
+
+          html += `
+            <div class="session-card ${session.status}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">${session.topic || "Learning Session"}</h6>
+                        <p class="mb-1 small">
+                            <i class="fas fa-user me-2"></i>${otherUser?.firstName} ${otherUser?.lastName}
+                            <span class="badge bg-secondary ms-2">${isTeacher ? "You are teaching" : "You are learning"}</span>
+                        </p>
+                        <p class="mb-1 small">
+                            <i class="fas fa-calendar me-2"></i>${session.date}
+                            <i class="fas fa-clock ms-3 me-2"></i>${session.time}
+                            <i class="fas ${session.mode === "online" ? "fa-video" : "fa-building"} ms-3 me-2"></i>${session.mode}
+                        </p>
+                        ${session.feedback ? `<p class="mb-0 small text-muted">⭐ ${renderStars(session.rating)} "${session.feedback}"</p>` : ""}
+                    </div>
+                    <span class="badge bg-${statusClass}">${session.status}</span>
+                </div>
+                
+                ${
+                  session.status === "pending" &&
+                  session.studentId === currentUser.id
+                    ? `
+                    <div class="mt-3 pt-2 border-top">
+                        <button class="btn btn-sm btn-success me-2" onclick="updateSessionStatus(${session.id}, 'accepted')"><i class="fas fa-check me-1"></i>Accept</button>
+                        <button class="btn btn-sm btn-danger" onclick="updateSessionStatus(${session.id}, 'cancelled')"><i class="fas fa-times me-1"></i>Decline</button>
+                    </div>
+                `
+                    : ""
+                }
+                
+                ${
+                  session.status === "accepted" &&
+                  session.teacherId === currentUser.id
+                    ? `
+                    <div class="mt-3 pt-2 border-top">
+                        <button class="btn btn-sm btn-success" onclick="completeSession(${session.id})"><i class="fas fa-check-circle me-1"></i>Mark as Completed</button>
+                    </div>
+                `
+                    : ""
+                }
+            </div>
+        `;
+        });
+        container.innerHTML = html;
+      }
+
+      function updateSessionStatus(sessionId, status) {
+        allSessions = JSON.parse(localStorage.getItem("sessions"));
+        const index = allSessions.findIndex((s) => s.id === sessionId);
+        if (index !== -1) {
+          allSessions[index].status = status;
+          localStorage.setItem("sessions", JSON.stringify(allSessions));
+          showToast(`Session ${status}!`, "success");
+          loadSessions(
+            document.querySelector(".filter-btn.active").dataset.filter,
+          );
+        }
+      }
+
+      function completeSession(sessionId) {
+        const rating = prompt("Rate this session (1-5 stars):", "5");
+        const feedback = prompt("Leave your feedback:", "Great session!");
+
+        if (rating && feedback) {
+          allSessions = JSON.parse(localStorage.getItem("sessions"));
+          const index = allSessions.findIndex((s) => s.id === sessionId);
+          if (index !== -1) {
+            allSessions[index].status = "completed";
+            allSessions[index].rating = parseInt(rating);
+            allSessions[index].feedback = feedback;
+            localStorage.setItem("sessions", JSON.stringify(allSessions));
+            showToast(
+              "Session completed! Thank you for your feedback.",
+              "success",
+            );
+            loadSessions(
+              document.querySelector(".filter-btn.active").dataset.filter,
+            );
+          }
+        }
+      }
+
+      function showNewSessionModal() {
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+        const otherUsers = users.filter(
+          (u) => u.id !== currentUser.id && u.isActive !== false,
+        );
+
+        const select = document.getElementById("sessionPartner");
+        select.innerHTML =
+          '<option value="">Choose a partner...</option>' +
+          otherUsers
+            .map(
+              (u) =>
+                `<option value="${u.id}">${u.firstName} ${u.lastName} (${u.teachSkills?.slice(0, 2).join(", ") || "No skills"})</option>`,
+            )
+            .join("");
+
+        document.getElementById("sessionDate").min = new Date()
+          .toISOString()
+          .split("T")[0];
+        new bootstrap.Modal(document.getElementById("newSessionModal")).show();
+      }
+
+      document
+        .getElementById("newSessionForm")
+        ?.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const partnerId = parseInt(
+            document.getElementById("sessionPartner").value,
+          );
+          const topic = document.getElementById("sessionTopic").value;
+          const date = document.getElementById("sessionDate").value;
+          const time = document.getElementById("sessionTime").value;
+          const mode = document.getElementById("sessionMode").value;
+
+          if (!partnerId || !topic || !date || !time) {
+            showToast("Please fill all fields", "error");
+            return;
+          }
+
+          allSessions = JSON.parse(localStorage.getItem("sessions")) || [];
+          const newSession = {
+            id: Date.now(),
+            teacherId: partnerId,
+            studentId: currentUser.id,
+            topic: topic,
+            date: date,
+            time: time,
+            mode: mode,
+            status: "pending",
+          };
+
+          allSessions.push(newSession);
+          localStorage.setItem("sessions", JSON.stringify(allSessions));
+
+          bootstrap.Modal.getInstance(
+            document.getElementById("newSessionModal"),
+          ).hide();
+          document.getElementById("newSessionForm").reset();
+          showToast("Session request sent successfully!", "success");
+          loadSessions("all");
+        });
+
+      // Filter buttons
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".filter-btn")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+          loadSessions(this.dataset.filter);
+        });
+      });
+
+      document.getElementById("logoutBtn")?.addEventListener("click", (e) => {
+        e.preventDefault();
+        localStorage.removeItem("currentUser");
+        window.location.href = "index.html";
+      });
+
+      // Initialize
+      initDummySessions();
+      if (checkAuth()) {
+        loadSessions("all");
+      }
+
+      window.showNewSessionModal = showNewSessionModal;
+      window.updateSessionStatus = updateSessionStatus;
+      window.completeSession = completeSession;
+    </script>
+  </body>
+</html>

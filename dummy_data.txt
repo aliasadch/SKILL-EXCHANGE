@@ -1,0 +1,12 @@
+🔑 WORKING TEST CREDENTIALS (After running the script)
+Role	Email	Password
+Admin	admin@skillswap.com	admin123
+Regular User	john.doe@example.com	password123
+Regular User	jane.smith@example.com	password123
+Regular User	mike.johnson@example.com	password123
+Regular User	sarah.wilson@example.com	password123
+Regular User	ali.asad@example.com	password123
+Regular User	emma.davis@example.com	password123
+Regular User	ahmad.khan@example.com	password123
+Regular User	fatima.rizvi@example.com	password123
+Regular User	bilal.hassan@example.com	password123
